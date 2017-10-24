@@ -20,7 +20,7 @@ public class ImagePath {
     
     public BufferedImage addPathToImage(ArrayList<Point> path, BufferedImage img){
         BufferedImage imgNew = img;
-        Color white = new Color(255, 0, 0);
+        Color white = new Color(255, 0, 0); //set path to red
         int rgb = white.getRGB();
         Point pathPT;
         Point neighPT[];
@@ -29,7 +29,7 @@ public class ImagePath {
             pathPT = path.get(i);
             imgNew.setRGB(pathPT.getX(), pathPT.getY(), rgb);
             
-            neighPT = pathPT.getNeighbors();
+            neighPT = pathPT.getNeighbors(); //set pixel's neighbors red too, to help visualization
             for(int j = 0; j < neighPT.length; j++){
                 imgNew.setRGB(neighPT[j].getX(), neighPT[j].getY(), rgb);
             }

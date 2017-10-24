@@ -55,7 +55,7 @@ public class CostPath {
             }
         }
         Collections.sort(unPix); //sort values for classification
-        Collections.reverse(unPix);//reverse values unPix to give greatest to least as larger numbers are whiter
+        //Collections.reverse(unPix);//reverse values unPix to give greatest to least as larger numbers are whiter
         
         HashMap<Integer, Integer> classified = new HashMap<>();//create hashmap to store classified values
         for(int i = 0; i < unPix.size(); i++)  //classify values from smallest to largest as 1 --> unPix.size
@@ -85,7 +85,7 @@ public class CostPath {
         for(int x = 0; x < img.getWidth(); x++){
             for(int y = 0; y < img.getHeight(); y++){
                 for (Point n1 : n) {
-                    if (isCorrect(n1, img)) {//test to make sure neighbors are valid points in the image
+                    if (isCorrect(n1, img) == true) {//test to make sure neighbors are valid points in the image
                         current = relax(dist, weights, current, n1);
                     }
                 }
