@@ -54,11 +54,20 @@ public class CostPath {
                     unPix.add(total);
             }
         }
-        unPix.sort(null); //sort values for classification
+        Collections.sort(unPix); //sort values for classification
+        Collections.reverse(unPix);//reverse values unPix to give greatest to least as larger numbers are whiter
         
         HashMap<Integer, Integer> classified = new HashMap<>();//create hashmap to store classified values
         for(int i = 0; i < unPix.size(); i++)  //classify values from smallest to largest as 1 --> unPix.size
             classified.put(unPix.get(i), i+1);
+        
+        int classValue; 
+        for(int x = 0; x < img.getWidth(); x++){ //change values in weights from total of all 3 pixels
+            for(int y = 0; y < img.getHeight(); y++){ //to their classified values stored in HashMap Classified
+                classValue = classified.get(weights[x][y]);
+                weights[x][y] = classValue;
+            }
+        }
     //////////////////////Begin Processing////////////////////////////////////////////////////////////////////////////
         
         ArrayList<Point> path = new ArrayList<>();

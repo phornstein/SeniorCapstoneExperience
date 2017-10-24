@@ -20,7 +20,7 @@ public class ImagePath {
     
     public BufferedImage addPathToImage(ArrayList<Point> path, BufferedImage img){
         BufferedImage imgNew = img;
-        Color white = new Color(255, 255, 255);
+        Color white = new Color(255, 0, 0);
         int rgb = white.getRGB();
         Point pathPT;
         Point neighPT[];

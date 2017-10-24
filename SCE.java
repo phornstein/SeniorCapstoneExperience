@@ -35,7 +35,7 @@ class SCE {
         BufferedImage img = null;
         File f = null;
         try{
-           f = new File("ChestertownWeightedSum_Remap_Discrete.jpg");        
+           f = new File("ChestertownWeightedSum_Remap.jpg");        
            img = ImageIO.read(f);
         }
         catch(IOException e){
@@ -44,7 +44,7 @@ class SCE {
         //creating testing variables
         ArrayList<Point> answer = new ArrayList<Point>();
         Point point1 = new Point(img.getWidth()/2,img.getHeight()/2);
-        Point point2 = new Point(img.getWidth()/2+100,img.getHeight()/2+100);
+        Point point2 = new Point(img.getWidth()/2+1000,img.getHeight()/2+1000);
         //find least cost path
         CostPath lCP = new CostPath();
         answer = lCP.leastCostPath(point1, point2, img);
