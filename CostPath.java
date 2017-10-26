@@ -6,6 +6,7 @@
 package sce;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.util.*;
 import sce.Point;
 import sce.ImagePath;
@@ -22,15 +23,13 @@ public class CostPath {
         else
             return true;
     }
-    
-    public Point relax(int dist[][], int weight[][], Point p, Point v){
-        //Point pNew = new Point(0,0)
-        if(dist[p.getX()][p.getY()] > 
-                dist[v.getX()][v.getY()] + weight[v.getX()][v.getY()]) //if the 'distance' of the point is greater
-            dist[v.getX()][v.getY()] = 
-                dist[p.getX()][p.getY()] + weight[v.getX()][v.getY()];
-        return v;                   
-        }
+    public Boolean isCorrect(Point p, int[][] arr){
+        if(p.getX() < 1 || p.getX() > arr.length - 1
+            || p.getY() < 1 || p.getY() > arr[0].length - 1)
+            return false;
+        else
+            return true;
+    }
 
     
     public ArrayList leastCostPath(Point source, Point destination, BufferedImage img){
@@ -38,16 +37,13 @@ public class CostPath {
         //Classify all Pixels         
         int weights[][] = new int[img.getWidth()][img.getHeight()]; //create 2d array to run least cost path over
         ArrayList<Integer> unPix = new ArrayList<>(); //store unique pixel values 
-        int p, r, g, b, total; //initialize pixel values
+        int p, total; //initialize pixel values
         //Find all unique pixels
+        Raster imgRaster = img.getData();
         for(int x = 0; x <img.getWidth(); x++){
             for(int y = 0; y <img.getHeight(); y++){
-                p = img.getRGB(x,y);
-                r = (p >> 16) & 0xff;
-                g = (p >> 8) & 0xff;
-                b = p & 0xff;
-                total = r + g + b; //total rgb values into one
-                
+                p = imgRaster.getSample(x,y,0);
+                total = p;
                 weights[x][y] = total; //add totaled rgb into search array
                 
                 if(unPix.contains(total) == false) //add unique values to list for classification
@@ -70,29 +66,37 @@ public class CostPath {
         }
     //////////////////////Begin Processing////////////////////////////////////////////////////////////////////////////
         
-        ArrayList<Point> path = new ArrayList<>();
-        int infinity = 1000000;
-        int dist[][] = new int[img.getWidth()][img.getHeight()]; //initialize array containing 'nodes'
-        for(int i = 0; i < img.getWidth(); i++){ //set distances to infinity
-            for(int j = 0; j < img.getHeight(); j++){
-                dist[i][j] = infinity;
-            }
-        }
-        dist[source.getX()][source.getY()] = 0; //set source to 0
-        Point n[] = source.getNeighbors();
-        Point current = source;
+        ArrayList<Point> predecessor = new ArrayList<>();
+        ArrayList<Point> explored = new ArrayList<>();
+        ArrayList<Integer> bestCost = new ArrayList<>();
+        Point temp[];
+        Point m, bestNeigh = null;
+        int minDist = 0;
         
-        for(int x = 0; x < img.getWidth(); x++){
-            for(int y = 0; y < img.getHeight(); y++){
-                for (Point n1 : n) {
-                    if (isCorrect(n1, img) == true) {//test to make sure neighbors are valid points in the image
-                        current = relax(dist, weights, current, n1);
+        
+        Queue<Point> active = new LinkedList<>();
+        active.add(source);
+        
+        while(explored.contains(destination) == false){
+            m = active.remove(); //get pixel to test
+            temp = m.getNeighbors(); //return all 8 neighbors of the active pixel
+            minDist = 10000; //set arbitrarily high
+            for(int j = 0; j < temp.length; j++){
+                //if(temp[j] == destination){ //if we've reached the destination point, break
+                //    break;
+                //}
+                if(isCorrect(temp[j], weights) == true){ //test pixel is in image
+                        if(weights[temp[j].getX()][temp[j].getY()] < minDist){ //if pixel being test has smaller weight than current best
+                        minDist = weights[temp[j].getX()][temp[j].getY()]; //best weight is current pixel
+                        bestNeigh = temp[j]; //record best neighbor of pixel m
                     }
+                    explored.add(bestNeigh); //add all explored pixels to explored
                 }
-                path.add(current);
             }
+            predecessor.add(m); //store m outside for loop
+            bestCost.add(minDist); //store best cost from all neighboring pixels of m
+            active.add(bestNeigh); //add best neighbor to queue for exploration
         }
-           
-           return path;
+           return predecessor;
     }   
 }

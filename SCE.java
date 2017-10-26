@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import javax.imageio.ImageIO;
 
 import java.io.*;
@@ -35,7 +36,7 @@ class SCE {
         BufferedImage img = null;
         File f = null;
         try{
-           f = new File("ChestertownWeightedSum_Remap.jpg");        
+           f = new File("ChestertownWeightedSum_1.png");        
            img = ImageIO.read(f);
         }
         catch(IOException e){
@@ -44,7 +45,7 @@ class SCE {
         //creating testing variables
         ArrayList<Point> answer = new ArrayList<Point>();
         Point point1 = new Point(img.getWidth()/2,img.getHeight()/2);
-        Point point2 = new Point(img.getWidth()/2+1000,img.getHeight()/2+1000);
+        Point point2 = new Point(img.getWidth()/2+700,img.getHeight()/2+700);
         //find least cost path
         CostPath lCP = new CostPath();
         answer = lCP.leastCostPath(point1, point2, img);
@@ -70,5 +71,6 @@ class SCE {
         ImageIcon imgNew = new ImageIcon(img2);
         newImg.add(new JLabel(imgNew));
         newImg.setVisible(true);
-    }
+    
+        }
 }
