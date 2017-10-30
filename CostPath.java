@@ -81,14 +81,16 @@ public class CostPath {
         ArrayList<Point> explored = new ArrayList<>();
         ArrayList<Integer> bestCost = new ArrayList<>();
         Point temp[];
-        Point m;
-        Point bestNeigh = null;
-        int minDist = 0;
+        Point m = null;
+        Point bestNeigh = new Point();
         Point temp2;
+        int minDist = 0;
         
         //Queue<Point> active = new LinkedList<>();
         explored.add(source);
-        jeffrey: //declare outer loop
+        weights[source.getX()][source.getY()] = 0;
+        
+        outerloop: //declare outer loop
         while(explored.contains(destination) != true){
            for(int i = 0; i < explored.size(); i++){ 
                 m = explored.get(i);
@@ -99,22 +101,30 @@ public class CostPath {
                 minDist = weights[temp2.getX()][temp2.getY()]; //set minDist to top left neighbor... removes one comparisson from loop
                 for(int j = 1; j < temp.length; j++){
                     //System.out.println(temp[j].getX() + ", " + temp[j].getY() + ": " + weights[temp[j].getX()][temp[j].getY()]);
-                    //if(isCorrect(temp[j], weights) == true){ //test pixel is in image
-                        if(temp[j].getX() == destination.getX() && temp[j].getY() == destination.getY()){
+                    inner:
+                    //if(isCorrect(temp[j], weights)){ //test pixel is in image
+                        if(predecessor.contains(temp[j]) == true){
+                            break inner;
+                        }
+                        else if( temp[j].equals(destination)){
                             explored.add(temp[j]);
-                            break jeffrey; //break outer loop
+                            break outerloop; //break outer loop
                         }
                         else if(weights[temp[j].getX()][temp[j].getY()] < minDist){ //if pixel being test has smaller weight than current best
                             minDist = weights[temp[j].getX()][temp[j].getY()]; //best weight is current pixel
                             bestNeigh = temp[j]; //record best neighbor of pixel m
-                      // }
+                    //}
                     }
                 }
             }
+           System.out.println(bestNeigh.getX() + ", " + bestNeigh.getY() + ".................");
+           System.out.println(minDist + "..........................");
+           System.out.println("Number of points explored: " + explored.size());
+           System.out.println("m: " + m.getX() + " " + m.getY());
+           
          explored.add(bestNeigh);
-         predecessor.add(bestNeigh); //store m outside for loop
+         predecessor.add(m); //store m outside for loop
          bestCost.add(minDist); //store best cost from all neighboring pixels of m
-         //active.add(bestNeigh); //add best neighbor to queue for exploration
         }
         System.out.println("\n.......Least Cost Path Found............. \n");
         return predecessor;
