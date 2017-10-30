@@ -34,6 +34,8 @@ public class ImagePath {
                 imgNew.setRGB(neighPT[j].getX(), neighPT[j].getY(), rgb);
             }
         }
+    System.out.println("\n.......Displaying Path............. \n");     
+   
     return imgNew; 
     }
 }

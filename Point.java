@@ -5,6 +5,8 @@
  */
 package sce;
 
+import java.util.ArrayList;
+
 
 
 /**
@@ -19,6 +21,10 @@ public class Point{
     public Point(int x, int y){
         x1 = x;
         y1 = y;
+    }
+    
+    public Point(){
+        
     }
     
     public int getX(){
@@ -49,5 +55,23 @@ public class Point{
         
         Point neigh[] = {tL,tC,tR,cL,cR,bL,bC,bR};
         return neigh;
+    }
+        public boolean equals(Point p){
+        if(x1 == p.getX() && y1 == p.getY())
+            return true;
+        else
+            return false;
+    }
+    
+    public Boolean isWithin(ArrayList<Point> arrList){
+        Point p;
+        boolean test = false;
+        for(int i = 0; i < arrList.size(); i++){
+            p = arrList.get(i);
+            if(x1 == p.getX() && y1 == p.getY()){
+                test = true;
+            }
+        }
+        return test;
     }
 }

@@ -32,10 +32,10 @@ public class CostPath {
     }
 
     
-    public ArrayList leastCostPath(Point source, Point destination, BufferedImage img){
+    public ArrayList leastCostPath(Point src, Point dest, BufferedImage img){
       //////////////////////Prepare Image For Processing////////////////////////////////////////////////////////////  
         //Classify all Pixels         
-        int weights[][] = new int[img.getWidth()][img.getHeight()]; //create 2d array to run least cost path over
+        int graph[][] = new int[img.getWidth()][img.getHeight()]; //create 2d array to run least cost path over
         ArrayList<Integer> unPix = new ArrayList<>(); //store unique pixel values 
         int p, total; //initialize pixel values
         //Find all unique pixels
@@ -44,7 +44,7 @@ public class CostPath {
             for(int y = 0; y <img.getHeight(); y++){
                 p = imgRaster.getSample(x,y,0);
                 total = p;
-                weights[x][y] = total; //add totaled rgb into search array
+                graph[x][y] = total; //add totaled rgb into search array
                 
                 if(unPix.contains(total) == false) //add unique values to list for classification
                     unPix.add(total);
@@ -60,8 +60,8 @@ public class CostPath {
         int classValue; 
         for(int x = 0; x < img.getWidth(); x++){ //change values in weights from total of all 3 pixels
             for(int y = 0; y < img.getHeight(); y++){ //to their classified values stored in HashMap Classified
-                classValue = classified.get(weights[x][y]);
-                weights[x][y] = classValue;
+                classValue = classified.get(graph[x][y]);
+                graph[x][y] = classValue;
             }
         }
         
@@ -77,56 +77,48 @@ public class CostPath {
         }*/
     //////////////////////Begin Processing////////////////////////////////////////////////////////////////////////////    
     
-        ArrayList<Point> predecessor = new ArrayList<>();
-        ArrayList<Point> explored = new ArrayList<>();
-        ArrayList<Integer> bestCost = new ArrayList<>();
-        Point temp[];
-        Point m = null;
-        Point bestNeigh = new Point();
-        Point temp2;
-        int minDist = 0;
-        
-        //Queue<Point> active = new LinkedList<>();
-        explored.add(source);
-        weights[source.getX()][source.getY()] = 0;
-        
-        outerloop: //declare outer loop
-        while(explored.contains(destination) != true){
-           for(int i = 0; i < explored.size(); i++){ 
-                m = explored.get(i);
-                temp = m.getNeighbors(); //return all 8 neighbors of the active pixel
-                //for(Point e : temp)
-                //    System.out.println(e);
-                temp2 = temp[0];
-                minDist = weights[temp2.getX()][temp2.getY()]; //set minDist to top left neighbor... removes one comparisson from loop
-                for(int j = 1; j < temp.length; j++){
-                    //System.out.println(temp[j].getX() + ", " + temp[j].getY() + ": " + weights[temp[j].getX()][temp[j].getY()]);
-                    inner:
-                    //if(isCorrect(temp[j], weights)){ //test pixel is in image
-                        if(predecessor.contains(temp[j]) == true){
-                            break inner;
-                        }
-                        else if( temp[j].equals(destination)){
-                            explored.add(temp[j]);
-                            break outerloop; //break outer loop
-                        }
-                        else if(weights[temp[j].getX()][temp[j].getY()] < minDist){ //if pixel being test has smaller weight than current best
-                            minDist = weights[temp[j].getX()][temp[j].getY()]; //best weight is current pixel
-                            bestNeigh = temp[j]; //record best neighbor of pixel m
-                    //}
+    
+       ArrayList<Point> explored = new ArrayList();
+       Point[][] predecessor = new Point[graph[0].length][graph.length];
+       int minDist[][] = new int[graph[0].length][graph.length];
+       Point point = null;
+       Point bestNeigh = new Point(0,0);
+       Point neigh[];
+       int minCost = 0;
+       int nextCost = 0;
+       explored.add(src);
+       minDist[src.getX()][src.getY()] = graph[src.getX()][src.getY()];
+       
+       
+       while(dest.isWithin(explored)!= true){
+           minCost = Integer.MAX_VALUE;
+           for(int i = 0; i <explored.size(); i++){
+               point = explored.get(i);
+               neigh = point.getNeighbors();System.out.println();
+               for(int j = 0; j < neigh.length; j++){
+                   if(isCorrect(neigh[j], graph) == true && neigh[j].isWithin(explored) == false){
+                       nextCost = minDist[point.getX()][point.getY()] + graph[neigh[j].getX()][neigh[j].getY()];
+                       if(nextCost < minCost){
+                           minCost = nextCost;
+                           bestNeigh = neigh[j];
+                       }
                     }
                 }
-            }
-           System.out.println(bestNeigh.getX() + ", " + bestNeigh.getY() + ".................");
-           System.out.println(minDist + "..........................");
-           System.out.println("Number of points explored: " + explored.size());
-           System.out.println("m: " + m.getX() + " " + m.getY());
-           
-         explored.add(bestNeigh);
-         predecessor.add(m); //store m outside for loop
-         bestCost.add(minDist); //store best cost from all neighboring pixels of m
+           }
+       explored.add(bestNeigh);
+       predecessor[bestNeigh.getX()][bestNeigh.getY()] = point;
+       minDist[bestNeigh.getX()][bestNeigh.getY()] = minCost;
+       }
+    
+       ArrayList<Point> answer = new ArrayList<>();
+       Point current = dest;
+       while(!current.equals(src)){
+           answer.add(predecessor[current.getX()][current.getY()]);
+           current = predecessor[current.getX()][current.getY()];
         }
-        System.out.println("\n.......Least Cost Path Found............. \n");
-        return predecessor;
+       Collections.reverse(answer);
+       answer.add(dest);
+       return answer;
+    
     }   
 }

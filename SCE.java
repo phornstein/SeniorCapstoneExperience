@@ -51,30 +51,25 @@ class SCE {
         CostPath lCP = new CostPath();
         answer = lCP.leastCostPath(point1, point2, img);
         System.out.println("\n..........Printing Path........\n");
-      //  for(int i = 0; i < answer.size(); i++){
-      //      System.out.println(answer.get(i));
-      //  }
+        for(int i = 0; i < answer.size(); i++){
+            System.out.println(answer.get(i).getX() + ", " + answer.get(i).getY());
+        }
+        
+        
         //add path to image
-        BufferedImage img2 = img;
+       // BufferedImage img2 = img;
+        BufferedImage imgNew;
         ImagePath pathNew = new ImagePath();
-        pathNew.addPathToImage(answer, img2);
+        imgNew = pathNew.addPathToImage(answer, img);
         
         //display original image in JFrame
         JFrame original = new JFrame("Original Image");
         original.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         original.setLocationRelativeTo(null);
         original.setSize(600,600);
-        ImageIcon org = new ImageIcon(img);
+        ImageIcon org = new ImageIcon(imgNew);
         original.add(new JLabel(org));
         original.setVisible(true);
-        //display new image in JFrame
-        JFrame newImg = new JFrame("New Image");
-        newImg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        newImg.setLocationRelativeTo(null);
-        newImg.setSize(600,600);
-        ImageIcon imgNew = new ImageIcon(img2);
-        newImg.add(new JLabel(imgNew));
-        newImg.setVisible(true);
     
         }
 }
