@@ -44,12 +44,16 @@ class SCE {
         }
         //creating testing variables
         ArrayList<Point> answer = new ArrayList<Point>();
-        Point point1 = new Point(img.getWidth()/2,img.getHeight()/2);
-        Point point2 = new Point(img.getWidth()/2+700,img.getHeight()/2+700);
+        Point point1 = new Point(1234,1234);
+        Point point2 = new Point(1237,1234);
+        
         //find least cost path
         CostPath lCP = new CostPath();
         answer = lCP.leastCostPath(point1, point2, img);
-        Point pnt = null;
+        System.out.println("\n..........Printing Path........\n");
+      //  for(int i = 0; i < answer.size(); i++){
+      //      System.out.println(answer.get(i));
+      //  }
         //add path to image
         BufferedImage img2 = img;
         ImagePath pathNew = new ImagePath();
