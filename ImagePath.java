@@ -29,11 +29,17 @@ public class ImagePath {
             pathPT = path.get(i);
             imgNew.setRGB(pathPT.getX(), pathPT.getY(), rgb);
             
-            neighPT = pathPT.getNeighbors(); //set pixel's neighbors red too, to help visualization
+           /* neighPT = pathPT.getNeighbors(); //set pixel's neighbors red too, to help visualization
             for(int j = 0; j < neighPT.length; j++){
                 imgNew.setRGB(neighPT[j].getX(), neighPT[j].getY(), rgb);
-            }
+            }*/
         }
+        Color blue = new Color(0,255,255);
+        int rgbBlue = blue.getRGB();
+        int max = path.size()-1;
+        imgNew.setRGB(path.get(0).getX(),path.get(0).getY(), rgbBlue);
+        imgNew.setRGB(path.get(max).getX(),path.get(max).getY(), rgbBlue);
+        
     System.out.println("\n.......Displaying Path............. \n");     
    
     return imgNew; 

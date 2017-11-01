@@ -75,7 +75,21 @@ public class CostPath {
             }
             System.out.println( );
         }*/
-    //////////////////////Begin Processing////////////////////////////////////////////////////////////////////////////    
+        /*if(dest.getX()>src.getX() && dest.getY() < src.getY()){ //lower Y value is higher on the image
+            for(int x = 0; x < src.getX(); x++){
+                for(int y = 0; y < graph[0].length; y++){
+                    graph[x][y] = graph[x][y] +100;
+                }
+            }
+            for(int x = 0; x < graph.length; x++){
+                for(int y = src.getY()+1; y < graph[0].length; y++){
+                    graph[x][y] = graph[x][y] +100;
+                }
+            }
+        }*/
+
+
+//////////////////////Begin Processing////////////////////////////////////////////////////////////////////////////    
     
     
        ArrayList<Point> explored = new ArrayList();

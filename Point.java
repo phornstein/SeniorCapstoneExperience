@@ -74,4 +74,16 @@ public class Point{
         }
         return test;
     }
+    
+    public Boolean isWithin(Point[] arr){
+        Point p;
+        boolean test = false;
+        for(int i = 0; i < arr.length; i++){
+            p = arr[i];
+            if(x1 == p.getX() && y1 == p.getY()){
+                test = true;
+            }
+        }
+        return test;
+    }
 }
