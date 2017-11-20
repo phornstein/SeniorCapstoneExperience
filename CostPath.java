@@ -66,28 +66,56 @@ public class CostPath {
         }
         
         System.out.print("\n.......Pre-Processing Completed............. \n");
-        /*for(int a = 2210; a < 2230; a++){
-            for(int b = 1545 ; b < 1565; b++){
-                if(weights[a][b] < 10)
-                    System.out.print(" " + weights[a][b] + ", ");
-                else
-                    System.out.print(weights[a][b] + ", ");
-            }
-            System.out.println( );
-        }*/
-        /*if(dest.getX()>src.getX() && dest.getY() < src.getY()){ //lower Y value is higher on the image
-            for(int x = 0; x < src.getX(); x++){
+      
+        if(dest.getX() > src.getX() && src.getX() > 25 && img.getWidth() - dest.getX() > 25){ //lower Y value is higher on the image
+            for(int x = 0; x < src.getX() - 25; x++){
                 for(int y = 0; y < graph[0].length; y++){
                     graph[x][y] = graph[x][y] +100;
                 }
             }
-            for(int x = 0; x < graph.length; x++){
-                for(int y = src.getY()+1; y < graph[0].length; y++){
+            for(int x = dest.getX() + 25 ; x < img.getWidth(); x++){
+                for(int y = 0; y < graph[0].length; y++){
                     graph[x][y] = graph[x][y] +100;
                 }
             }
-        }*/
-
+        }
+        if(dest.getX() < src.getX() && dest.getX() > 25 && img.getWidth() - src.getX() > 25){ //lower Y value is higher on the image
+            for(int x = 0; x < dest.getX() - 25; x++){
+                for(int y = 0; y < graph[0].length; y++){
+                    graph[x][y] = graph[x][y] +100;
+                }
+            }
+            for(int x = src.getX() + 25 ; x < img.getWidth(); x++){
+                for(int y = 0; y < graph[0].length; y++){
+                    graph[x][y] = graph[x][y] +100;
+                }
+            }
+        }
+        
+        if(dest.getY() > src.getY() && src.getY() > 25 && img.getHeight() - dest.getY() > 25){ //lower Y value is higher on the image
+            for(int y = 0; y < src.getX() - 25; y++){
+                for(int x = 0; x < graph.length; x++){
+                    graph[x][y] = graph[x][y] +100;
+                }
+            }
+            for(int y = dest.getY() + 25 ; y < img.getHeight(); y++){
+                for(int x = 0; x < graph.length; x++){
+                    graph[x][y] = graph[x][y] +100;
+                }
+            }
+        }
+        if(dest.getY() < src.getY() && dest.getY() > 25 && img.getHeight() - src.getY() > 25){ //lower Y value is higher on the image
+            for(int y = 0; y < dest.getY() - 25; y++){
+                for(int x = 0; x < graph.length; x++){
+                    graph[x][y] = graph[x][y] +100;
+                }
+            }
+            for(int y = src.getY() + 25 ; y < img.getHeight(); y++){
+                for(int x = 0; x < graph.length; x++){
+                    graph[x][y] = graph[x][y] +100;
+                }
+            }
+        }
 
 //////////////////////Begin Processing////////////////////////////////////////////////////////////////////////////    
     
@@ -98,6 +126,7 @@ public class CostPath {
        Point point = null;
        Point bestNeigh = new Point(0,0);
        Point neigh[];
+       Point previous = null;
        int minCost = 0;
        int nextCost = 0;
        explored.add(src);
@@ -108,19 +137,20 @@ public class CostPath {
            minCost = Integer.MAX_VALUE;
            for(int i = 0; i <explored.size(); i++){
                point = explored.get(i);
-               neigh = point.getNeighbors();System.out.println();
+               neigh = point.getNeighbors();
                for(int j = 0; j < neigh.length; j++){
                    if(isCorrect(neigh[j], graph) == true && neigh[j].isWithin(explored) == false){
                        nextCost = minDist[point.getX()][point.getY()] + graph[neigh[j].getX()][neigh[j].getY()];
                        if(nextCost < minCost){
                            minCost = nextCost;
                            bestNeigh = neigh[j];
+                           previous = point;
                        }
                     }
                 }
            }
        explored.add(bestNeigh);
-       predecessor[bestNeigh.getX()][bestNeigh.getY()] = point;
+       predecessor[bestNeigh.getX()][bestNeigh.getY()] = previous;
        minDist[bestNeigh.getX()][bestNeigh.getY()] = minCost;
        }
     
@@ -130,8 +160,8 @@ public class CostPath {
            answer.add(predecessor[current.getX()][current.getY()]);
            current = predecessor[current.getX()][current.getY()];
         }
+       answer.add(src);
        Collections.reverse(answer);
-       answer.add(dest);
        return answer;
     
     }   

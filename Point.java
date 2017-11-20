@@ -26,6 +26,11 @@ public class Point{
     public Point(){
         
     }
+
+    Point(java.awt.Point point) {
+        x1 = (int) point.getX();
+        y1 = (int) point.getY();
+    }
     
     public int getX(){
         return x1;
